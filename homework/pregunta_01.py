@@ -4,7 +4,28 @@
 """
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
+import os 
+import pandas as pd
 
+def create_file_cvs(name_cvs, dir_input_path, dir_ouput_path):
+    #Definicion de variables
+    row = []
+    #Recorrido por cada una de las carpetas presentes en la ruta de entrada.
+    for folder in os.listdir(dir_input_path):
+        #Union de ruta con el nombre de la carpeta
+        folder_path = os.path.join(dir_input_path, folder)
+        #Recorrido por uno de los elmentos presentes en las carpeta.
+        for file in os.listdir(folder_path):
+            #Union de ruta de la carpeta con el nombre del archivo de texto
+            text_path = os.path.join(folder_path, file)
+            #Agregar linea de texto como una serie a la lista
+            with open(text_path, "r") as f:
+                row.append({"phrase" : f.read(), "target" : str(folder)})
+    #Generar dataframe
+    df = pd.DataFrame(row)
+    #Convertir y guardar dataframe como a csv
+    output_file = os.path.join(dir_ouput_path, name_cvs)
+    df.to_csv(output_file, index=False)
 
 def pregunta_01():
     """
@@ -71,3 +92,9 @@ def pregunta_01():
 
 
     """
+    #Crear "test_dataset.csv"
+    create_file_cvs("test_dataset.csv", "./files/input/test", "./files/output")
+    #Crear "train_dataset.csv"
+    create_file_cvs("train_dataset.csv", "./files/input/train", "./files/output")
+
+
